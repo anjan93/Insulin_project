@@ -1,0 +1,52 @@
+package application;
+
+import java.text.DecimalFormat;
+
+public class CalculationOfInsulinGlucagonDosage 
+{
+	private static double calculatedinsulindose;
+	private static double calculatedGlucagondose;
+	
+	public static Double getInsulinDosageValue(double currentBSL) {
+		calculatedinsulindose = 0;
+		if(currentBSL >= StaticValuesforBSL.MaximumBloodSugarLevel) {
+			double insulinCorrectionFactor = (getChangeInBSForInsulin(currentBSL)) / StaticValuesforBSL.ISF;
+
+			calculatedinsulindose = Double.parseDouble(new DecimalFormat("##.##").format(insulinCorrectionFactor));
+		}
+		return calculatedinsulindose;
+	}
+	
+	private static double getChangeInBSForInsulin(double currentBSL) {
+		if(currentBSL > 120 && currentBSL <= 130) {
+			return 5;
+		}
+		else if(currentBSL > 130 && currentBSL <= 150) {
+			return 10;
+		}
+		else if(currentBSL > 150 && currentBSL <= 180) {
+			return 15;
+		}
+		else if(currentBSL > 180 && currentBSL <=220) {
+			return 20;
+		}
+		return 25;
+	}
+	
+	private static double getChangeInBSForGlucagon(double currentBSL) {
+		if(currentBSL >= 65 && currentBSL < 70) {
+			return 3;
+		}
+		return 6;
+	}
+	
+	
+	public static Double getGlucagonDosageValue(double currentBSL) {
+		calculatedGlucagondose = 0;
+		if (currentBSL < StaticValuesforBSL.MinimumBloodSugarLevel) {
+			calculatedGlucagondose = getChangeInBSForGlucagon(currentBSL) / 3;
+			calculatedGlucagondose = Double.parseDouble(new DecimalFormat("##.##").format(calculatedGlucagondose));
+		}
+		return calculatedGlucagondose;
+	}
+}
